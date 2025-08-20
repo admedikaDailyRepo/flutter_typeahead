@@ -196,25 +196,31 @@ class _SuggestionsListState<T> extends State<SuggestionsList<T>> {
           );
         }
 
-        return ListView.separated(
-          // We cannot pass a controller, as we want to inherit it from
-          // the PrimaryScrollController of the SuggestionsBox.
-          // This happens automatically as long as we
-          // dont pass a controller and pass either null or true for primary.
-          controller: null,
-          primary: null,
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          keyboardDismissBehavior: (widget.hideKeyboardOnDrag ?? false)
-              ? ScrollViewKeyboardDismissBehavior.onDrag
-              : ScrollViewKeyboardDismissBehavior.manual,
-          reverse: widget.controller.effectiveDirection == VerticalDirection.up,
-          itemCount: suggestions.length,
-          itemBuilder: (context, index) =>
-              widget.itemBuilder(context, suggestions[index]),
-          separatorBuilder: (context, index) =>
-              widget.itemSeparatorBuilder?.call(context, index) ??
-              const SizedBox.shrink(),
+        return RawScrollbar(
+          scrollbarOrientation: ScrollbarOrientation.right,
+          interactive: false,
+          thumbVisibility: true,
+          child: ListView.separated(
+            // We cannot pass a controller, as we want to inherit it from
+            // the PrimaryScrollController of the SuggestionsBox.
+            // This happens automatically as long as we
+            // dont pass a controller and pass either null or true for primary.
+            controller: null,
+            primary: null,
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            keyboardDismissBehavior: (widget.hideKeyboardOnDrag ?? false)
+                ? ScrollViewKeyboardDismissBehavior.onDrag
+                : ScrollViewKeyboardDismissBehavior.manual,
+            reverse:
+                widget.controller.effectiveDirection == VerticalDirection.up,
+            itemCount: suggestions.length,
+            itemBuilder: (context, index) =>
+                widget.itemBuilder(context, suggestions[index]),
+            separatorBuilder: (context, index) =>
+                widget.itemSeparatorBuilder?.call(context, index) ??
+                const SizedBox.shrink(),
+          ),
         );
       },
     );
