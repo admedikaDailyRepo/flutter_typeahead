@@ -198,7 +198,7 @@ class _SuggestionsListState<T> extends State<SuggestionsList<T>> {
 
         return MediaQuery.removePadding(
           context: context,
-          removeBottom: true,
+          removeLeft: true,
           child: RawScrollbar(
             scrollbarOrientation: ScrollbarOrientation.right,
             interactive: false,
