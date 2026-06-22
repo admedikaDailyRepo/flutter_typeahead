@@ -99,20 +99,25 @@ class ExampleTypeAhead extends StatelessWidget
                   borderRadius: borderRadius,
                   child: child,
                 ),
-                itemBuilder: (context, product) => ListTile(
-                  title: Text(product.name),
-                  subtitle: product.description != null
-                      ? Text(
-                          '${product.description!} - \$${product.price}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : Text('\$${product.price}'),
-                ),
+                itemBuilder: (context, product) {
+                  if (product == null) {
+                    return const Text("Product Mendapati Data Null");
+                  }
+
+                  return ListTile(
+                    title: Text(product.name),
+                    subtitle: product.description != null
+                        ? Text(
+                            '${product.description!} - \$${product.price}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : Text('\$${product.price}'),
+                  );
+                },
                 debounceDuration: debounceDuration,
                 hideOnSelect: settings.hideOnSelect.value,
                 hideOnUnfocus: settings.hideOnUnfocus.value,
-                hideWithKeyboard: settings.hideOnUnfocus.value,
                 retainOnLoading: settings.retainOnLoading.value,
                 onSelected: onSuggestionSelected,
                 suggestionsCallback: suggestionsCallback,
@@ -238,19 +243,18 @@ class CupertinoExampleTypeAhead extends StatelessWidget
                   child: child,
                 ),
                 itemBuilder: (context, product) => CupertinoListTile(
-                  title: Text(product.name),
-                  subtitle: product.description != null
+                  title: Text(product?.name ?? ""),
+                  subtitle: product?.description != null
                       ? Text(
-                          '${product.description!} - \$${product.price}',
+                          '${product?.description!} - \$${product?.price}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
-                      : Text('\$${product.price}'),
+                      : Text('\$${product?.price}'),
                 ),
                 debounceDuration: debounceDuration,
                 hideOnSelect: settings.hideOnSelect.value,
                 hideOnUnfocus: settings.hideOnUnfocus.value,
-                hideWithKeyboard: settings.hideOnUnfocus.value,
                 retainOnLoading: settings.retainOnLoading.value,
                 onSelected: onSuggestionSelected,
                 suggestionsCallback: suggestionsCallback,

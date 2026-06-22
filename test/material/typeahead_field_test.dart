@@ -9,7 +9,7 @@ void main() {
         MaterialApp(
           home: Material(
             child: TypeAheadField<String>(
-              itemBuilder: (context, value) => Text(value),
+              itemBuilder: (context, value) => Text(value ?? ""),
               onSelected: (value) {},
               suggestionsCallback: (search) {
                 return ['a', 'b', 'c'];

@@ -35,8 +35,6 @@ class SuggestionsList<T> extends StatefulWidget {
   /// {@template flutter_typeahead.SuggestionsList.hideKeyboardOnDrag}
   /// Whether the keyboard should be hidden when the user scrolls the suggestions list.
   ///
-  /// Cannot be used together with [hideWithKeyboard].
-  ///
   /// Defaults to `false`.
   /// {@endtemplate}
   final bool? hideKeyboardOnDrag;
@@ -122,7 +120,7 @@ class SuggestionsList<T> extends StatefulWidget {
   /// },
   /// ```
   /// {@endtemplate}
-  final SuggestionsItemBuilder<T> itemBuilder;
+  final SuggestionsItemBuilder<T?> itemBuilder;
 
   /// {@template flutter_typeahead.SuggestionsList.itemSeparatorBuilder}
   /// Optional builder function to add separators between suggestions.
@@ -154,25 +152,42 @@ class SuggestionsList<T> extends StatefulWidget {
   /// ),
   /// ```
   /// {@endtemplate}
-  final ListBuilder? listBuilder;
+  final SuggestionsListBuilder? listBuilder;
 
   @override
   State<SuggestionsList<T>> createState() => _SuggestionsListState<T>();
 }
 
 class _SuggestionsListState<T> extends State<SuggestionsList<T>> {
+  List<T>? _previousSuggestions;
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: widget.controller,
       builder: (context, _) {
         List<T>? suggestions = widget.controller.suggestions;
-        bool retainOnLoading = widget.retainOnLoading ?? true;
+        bool retain = widget.retainOnLoading ?? true;
+
+        if (retain) {
+          if (widget.controller.isLoading) {
+            suggestions = suggestions ?? _previousSuggestions;
+          } else {
+            if (suggestions != null) {
+              _previousSuggestions = suggestions;
+            }
+          }
+        } else {
+          _previousSuggestions = null;
+        }
 
         bool isError = widget.controller.hasError;
         bool isEmpty = suggestions?.isEmpty ?? false;
-        bool isLoading = widget.controller.isLoading &&
-            (suggestions == null || isEmpty || !retainOnLoading);
+        bool isLoading = widget.controller.isLoading;
+
+        if (retain) {
+          isLoading = isLoading && (suggestions == null || isEmpty);
+        }
 
         if (isLoading) {
           if (widget.hideOnLoading ?? false) return const SizedBox();
@@ -219,7 +234,7 @@ class _SuggestionsListState<T> extends State<SuggestionsList<T>> {
                   widget.controller.effectiveDirection == VerticalDirection.up,
               itemCount: suggestions.length,
               itemBuilder: (context, index) =>
-                  widget.itemBuilder(context, suggestions[index]),
+                  widget.itemBuilder(context, suggestions?[index] ),
               separatorBuilder: (context, index) =>
                   widget.itemSeparatorBuilder?.call(context, index) ??
                   const SizedBox.shrink(),
