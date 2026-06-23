@@ -28,7 +28,7 @@ class TypeAheadField<T> extends RawTypeAheadField<T> {
     super.showOnFocus,
     super.hideOnUnfocus,
     super.hideOnSelect,
-    required SuggestionsItemBuilder<T?> itemBuilder,
+    required SuggestionsItemBuilder<T> itemBuilder,
     super.itemSeparatorBuilder,
     super.retainOnLoading,
     WidgetBuilder? loadingBuilder,

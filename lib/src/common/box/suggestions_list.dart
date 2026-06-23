@@ -120,7 +120,7 @@ class SuggestionsList<T> extends StatefulWidget {
   /// },
   /// ```
   /// {@endtemplate}
-  final SuggestionsItemBuilder<T?> itemBuilder;
+  final SuggestionsItemBuilder<T> itemBuilder;
 
   /// {@template flutter_typeahead.SuggestionsList.itemSeparatorBuilder}
   /// Optional builder function to add separators between suggestions.
@@ -234,7 +234,7 @@ class _SuggestionsListState<T> extends State<SuggestionsList<T>> {
                   widget.controller.effectiveDirection == VerticalDirection.up,
               itemCount: suggestions.length,
               itemBuilder: (context, index) =>
-                  widget.itemBuilder(context, suggestions?[index] ),
+                  widget.itemBuilder(context, suggestions![index] ),
               separatorBuilder: (context, index) =>
                   widget.itemSeparatorBuilder?.call(context, index) ??
                   const SizedBox.shrink(),
